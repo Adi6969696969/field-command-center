@@ -9,6 +9,10 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Workers from "./pages/Workers";
 import Tasks from "./pages/Tasks";
+import SmartAssign from "./pages/SmartAssign";
+import GeoIntel from "./pages/GeoIntel";
+import Leaderboard from "./pages/Leaderboard";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +53,10 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/workers" element={<ProtectedRoute><Workers /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+            <Route path="/smart-assign" element={<ProtectedRoute><SmartAssign /></ProtectedRoute>} />
+            <Route path="/geo-intel" element={<ProtectedRoute><GeoIntel /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+            <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

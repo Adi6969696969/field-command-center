@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -17,6 +17,10 @@ const navItems = [
   { title: "War Room", url: "/dashboard", icon: LayoutDashboard },
   { title: "Workers", url: "/workers", icon: Users },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
+  { title: "Smart Assign", url: "/smart-assign", icon: Brain },
+  { title: "Geo Intel", url: "/geo-intel", icon: Map },
+  { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
+  { title: "Feedback", url: "/feedback", icon: MessageSquare },
 ];
 
 export function AppSidebar() {

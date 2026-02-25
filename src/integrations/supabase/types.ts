@@ -14,6 +14,88 @@ export type Database = {
   }
   public: {
     Tables: {
+      badges: {
+        Row: {
+          awarded_at: string
+          badge_name: string
+          badge_type: string
+          description: string | null
+          id: string
+          worker_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          badge_name: string
+          badge_type: string
+          description?: string | null
+          id?: string
+          worker_id: string
+        }
+        Update: {
+          awarded_at?: string
+          badge_name?: string
+          badge_type?: string
+          description?: string | null
+          id?: string
+          worker_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badges_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feedback: {
+        Row: {
+          booth: string | null
+          content: string
+          created_at: string
+          district: string | null
+          id: string
+          sentiment: string | null
+          sentiment_score: number | null
+          submitted_by: string
+          topics: string[] | null
+          worker_id: string | null
+        }
+        Insert: {
+          booth?: string | null
+          content: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          sentiment?: string | null
+          sentiment_score?: number | null
+          submitted_by: string
+          topics?: string[] | null
+          worker_id?: string | null
+        }
+        Update: {
+          booth?: string | null
+          content?: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          sentiment?: string | null
+          sentiment_score?: number | null
+          submitted_by?: string
+          topics?: string[] | null
+          worker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

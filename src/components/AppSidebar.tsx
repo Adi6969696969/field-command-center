@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -21,6 +21,8 @@ const navItems = [
   { title: "Geo Intel", url: "/geo-intel", icon: Map },
   { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
   { title: "Feedback", url: "/feedback", icon: MessageSquare },
+  { title: "Fraud Detection", url: "/fraud-detection", icon: ShieldAlert },
+  { title: "AI Co-Pilot", url: "/ai-copilot", icon: Bot },
 ];
 
 export function AppSidebar() {

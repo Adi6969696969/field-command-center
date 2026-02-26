@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Search, UserCircle, Trash2 } from "lucide-react";
+import { Plus, Search, UserCircle, Trash2, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Worker {
   id: string;
@@ -35,6 +36,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function Workers() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -232,7 +234,10 @@ export default function Workers() {
                   <p className="text-[9px]">EXP</p>
                 </div>
               </div>
-              <button onClick={() => handleDelete(w.id)} className="text-muted-foreground hover:text-destructive transition-colors">
+              <button onClick={() => navigate(`/workers/${w.id}`)} className="text-muted-foreground hover:text-accent transition-colors" title="View Profile">
+                <Eye className="w-4 h-4" />
+              </button>
+              <button onClick={() => handleDelete(w.id)} className="text-muted-foreground hover:text-destructive transition-colors" title="Delete">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>

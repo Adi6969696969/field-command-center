@@ -8,11 +8,14 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Workers from "./pages/Workers";
+import WorkerProfile from "./pages/WorkerProfile";
 import Tasks from "./pages/Tasks";
 import SmartAssign from "./pages/SmartAssign";
 import GeoIntel from "./pages/GeoIntel";
 import Leaderboard from "./pages/Leaderboard";
 import Feedback from "./pages/Feedback";
+import FraudDetection from "./pages/FraudDetection";
+import AICoPilot from "./pages/AICoPilot";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,11 +55,14 @@ const App = () => (
             <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/workers" element={<ProtectedRoute><Workers /></ProtectedRoute>} />
+            <Route path="/workers/:id" element={<ProtectedRoute><WorkerProfile /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
             <Route path="/smart-assign" element={<ProtectedRoute><SmartAssign /></ProtectedRoute>} />
             <Route path="/geo-intel" element={<ProtectedRoute><GeoIntel /></ProtectedRoute>} />
             <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
             <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+            <Route path="/fraud-detection" element={<ProtectedRoute><FraudDetection /></ProtectedRoute>} />
+            <Route path="/ai-copilot" element={<ProtectedRoute><AICoPilot /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

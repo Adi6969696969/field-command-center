@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Send, MessageSquare, TrendingUp, TrendingDown, Minus, Loader2 } from "lucide-react";
+import { Send, MessageSquare, TrendingUp, TrendingDown, Minus, Loader2, Mic, MicOff } from "lucide-react";
 
 interface FeedbackItem {
   id: string;
@@ -35,6 +35,35 @@ export default function Feedback() {
   const [content, setContent] = useState("");
   const [district, setDistrict] = useState("");
   const [booth, setBooth] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+
+  // Voice input setup
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = "en-IN";
+      rec.onresult = (e: any) => {
+        let transcript = "";
+        for (let i = 0; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        setContent(transcript);
+      };
+      rec.onerror = () => setIsRecording(false);
+      rec.onend = () => setIsRecording(false);
+      setRecognition(rec);
+    }
+  }, []);
+
+  const toggleRecording = () => {
+    if (!recognition) { toast.error("Speech recognition not supported in this browser"); return; }
+    if (isRecording) { recognition.stop(); setIsRecording(false); }
+    else { recognition.start(); setIsRecording(true); toast.info("Listening... speak now"); }
+  };
 
   const fetchFeedback = async () => {
     const { data, error } = await supabase
@@ -162,10 +191,16 @@ export default function Feedback() {
               <Input value={booth} onChange={(e) => setBooth(e.target.value)} className="bg-muted border-border font-mono text-sm" />
             </div>
           </div>
-          <Button type="submit" disabled={submitting || !content.trim()} className="font-mono text-xs uppercase tracking-wider">
-            {submitting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />}
-            {submitting ? "Analyzing..." : "Submit & Analyze"}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={submitting || !content.trim()} className="font-mono text-xs uppercase tracking-wider flex-1">
+              {submitting ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Send className="w-4 h-4 mr-1" />}
+              {submitting ? "Analyzing..." : "Submit & Analyze"}
+            </Button>
+            <Button type="button" onClick={toggleRecording} variant={isRecording ? "destructive" : "outline"} className="font-mono text-xs uppercase tracking-wider">
+              {isRecording ? <MicOff className="w-4 h-4 mr-1" /> : <Mic className="w-4 h-4 mr-1" />}
+              {isRecording ? "Stop" : "Voice"}
+            </Button>
+          </div>
         </form>
       </div>
 

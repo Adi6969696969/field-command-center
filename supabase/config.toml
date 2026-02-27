@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.analyze-sentiment]
 verify_jwt = false
+
+[functions.ai-copilot]
+verify_jwt = false
+
+[functions.ai-readiness]
+verify_jwt = false

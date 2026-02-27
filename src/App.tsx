@@ -16,6 +16,15 @@ import Leaderboard from "./pages/Leaderboard";
 import Feedback from "./pages/Feedback";
 import FraudDetection from "./pages/FraudDetection";
 import AICoPilot from "./pages/AICoPilot";
+import ReadinessIndex from "./pages/ReadinessIndex";
+import BurnoutDetection from "./pages/BurnoutDetection";
+import WarMode from "./pages/WarMode";
+import DigitalTwin from "./pages/DigitalTwin";
+import BlockchainLedger from "./pages/BlockchainLedger";
+import HierarchyAnalytics from "./pages/HierarchyAnalytics";
+import IntelBrief from "./pages/IntelBrief";
+import ResourceOptimization from "./pages/ResourceOptimization";
+import WorkloadBalancer from "./pages/WorkloadBalancer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +72,15 @@ const App = () => (
             <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
             <Route path="/fraud-detection" element={<ProtectedRoute><FraudDetection /></ProtectedRoute>} />
             <Route path="/ai-copilot" element={<ProtectedRoute><AICoPilot /></ProtectedRoute>} />
+            <Route path="/readiness" element={<ProtectedRoute><ReadinessIndex /></ProtectedRoute>} />
+            <Route path="/burnout" element={<ProtectedRoute><BurnoutDetection /></ProtectedRoute>} />
+            <Route path="/war-mode" element={<ProtectedRoute><WarMode /></ProtectedRoute>} />
+            <Route path="/digital-twin" element={<ProtectedRoute><DigitalTwin /></ProtectedRoute>} />
+            <Route path="/blockchain" element={<ProtectedRoute><BlockchainLedger /></ProtectedRoute>} />
+            <Route path="/hierarchy" element={<ProtectedRoute><HierarchyAnalytics /></ProtectedRoute>} />
+            <Route path="/intel-brief" element={<ProtectedRoute><IntelBrief /></ProtectedRoute>} />
+            <Route path="/resources" element={<ProtectedRoute><ResourceOptimization /></ProtectedRoute>} />
+            <Route path="/workload" element={<ProtectedRoute><WorkloadBalancer /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

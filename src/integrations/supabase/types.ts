@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          action_type: string
+          actor_id: string
+          created_at: string
+          data_hash: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          previous_hash: string | null
+        }
+        Insert: {
+          action_type: string
+          actor_id: string
+          created_at?: string
+          data_hash: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          previous_hash?: string | null
+        }
+        Update: {
+          action_type?: string
+          actor_id?: string
+          created_at?: string
+          data_hash?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          previous_hash?: string | null
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           awarded_at: string
@@ -48,6 +84,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      broadcasts: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean
+          message: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean
+          message: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean
+          message?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: []
       }
       feedback: {
         Row: {

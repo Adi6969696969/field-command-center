@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -12,17 +12,43 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const navItems = [
+const commandItems = [
   { title: "War Room", url: "/dashboard", icon: LayoutDashboard },
+  { title: "War Mode", url: "/war-mode", icon: Radio },
+  { title: "AI Co-Pilot", url: "/ai-copilot", icon: Bot },
+];
+
+const operationsItems = [
   { title: "Workers", url: "/workers", icon: Users },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Smart Assign", url: "/smart-assign", icon: Brain },
+  { title: "Workload", url: "/workload", icon: Scale },
+];
+
+const intelligenceItems = [
+  { title: "Readiness", url: "/readiness", icon: Target },
   { title: "Geo Intel", url: "/geo-intel", icon: Map },
+  { title: "Hierarchy", url: "/hierarchy", icon: Layers },
+  { title: "Intel Brief", url: "/intel-brief", icon: FileText },
+  { title: "Digital Twin", url: "/digital-twin", icon: FlaskConical },
+];
+
+const monitoringItems = [
   { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
   { title: "Feedback", url: "/feedback", icon: MessageSquare },
-  { title: "Fraud Detection", url: "/fraud-detection", icon: ShieldAlert },
-  { title: "AI Co-Pilot", url: "/ai-copilot", icon: Bot },
+  { title: "Burnout", url: "/burnout", icon: Heart },
+  { title: "Fraud", url: "/fraud-detection", icon: ShieldAlert },
+  { title: "Resources", url: "/resources", icon: DollarSign },
+  { title: "Blockchain", url: "/blockchain", icon: Lock },
+];
+
+const navGroups = [
+  { label: "Command", items: commandItems },
+  { label: "Operations", items: operationsItems },
+  { label: "Intelligence", items: intelligenceItems },
+  { label: "Monitoring", items: monitoringItems },
 ];
 
 export function AppSidebar() {
@@ -46,30 +72,34 @@ export function AppSidebar() {
         </div>
       </div>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Command
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end
-                      className="font-mono text-xs tracking-wide hover:bg-muted/50"
-                      activeClassName="bg-primary/10 text-primary border-l-2 border-primary"
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <ScrollArea className="flex-1">
+          {navGroups.map((group) => (
+            <SidebarGroup key={group.label}>
+              <SidebarGroupLabel className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                {group.label}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <NavLink
+                          to={item.url}
+                          end
+                          className="font-mono text-xs tracking-wide hover:bg-muted/50"
+                          activeClassName="bg-primary/10 text-primary border-l-2 border-primary"
+                        >
+                          <item.icon className="mr-2 h-4 w-4" />
+                          <span>{item.title}</span>
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </ScrollArea>
       </SidebarContent>
       <SidebarFooter className="border-t border-border p-3">
         <div className="text-[10px] font-mono text-muted-foreground truncate mb-2">

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, FileText, Download, Brain } from "lucide-react";
+import { Loader2, FileText, Download, Brain, FileDown } from "lucide-react";
+import jsPDF from "jspdf";
 
 export default function IntelBrief() {
   const [brief, setBrief] = useState("");
@@ -120,7 +121,85 @@ Format as a clean markdown document. Be specific with numbers from the data prov
     a.download = `intel-brief-${new Date().toISOString().slice(0, 10)}.md`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Brief exported");
+    toast.success("Brief exported as Markdown");
+  };
+
+  const exportPDF = () => {
+    if (!brief) return;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    const maxWidth = pageWidth - margin * 2;
+    let y = 20;
+
+    // Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 204, 102);
+    doc.text("INTEL BRIEF", margin, y);
+    y += 8;
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Generated: ${new Date().toLocaleDateString()} | FieldOps Intelligence`, margin, y);
+    y += 4;
+    doc.setDrawColor(0, 204, 102);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 10;
+
+    // Body
+    doc.setTextColor(40, 40, 40);
+    const lines = brief.split("\n");
+
+    for (const line of lines) {
+      if (y > 275) {
+        doc.addPage();
+        y = 20;
+      }
+
+      if (line.startsWith("## ")) {
+        y += 4;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.setTextColor(0, 150, 80);
+        doc.text(line.replace("## ", ""), margin, y);
+        y += 7;
+      } else if (line.startsWith("# ")) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(0, 204, 102);
+        doc.text(line.replace("# ", ""), margin, y);
+        y += 9;
+      } else if (line.startsWith("- ")) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(40, 40, 40);
+        const wrapped = doc.splitTextToSize(`• ${line.slice(2)}`, maxWidth - 5);
+        doc.text(wrapped, margin + 3, y);
+        y += wrapped.length * 5;
+      } else if (line.trim() === "") {
+        y += 3;
+      } else {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(40, 40, 40);
+        const wrapped = doc.splitTextToSize(line.replace(/\*\*/g, ""), maxWidth);
+        doc.text(wrapped, margin, y);
+        y += wrapped.length * 5;
+      }
+    }
+
+    // Footer on last page
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`FieldOps Intel Brief — Page ${i}/${pageCount}`, margin, 290);
+    }
+
+    doc.save(`intel-brief-${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast.success("Brief exported as PDF");
   };
 
   return (
@@ -134,9 +213,14 @@ Format as a clean markdown document. Be specific with numbers from the data prov
         </div>
         <div className="flex gap-2">
           {brief && (
-            <Button onClick={exportBrief} variant="outline" className="font-mono text-xs uppercase tracking-wider">
-              <Download className="w-4 h-4 mr-1" /> Export
-            </Button>
+            <>
+              <Button onClick={exportPDF} variant="outline" className="font-mono text-xs uppercase tracking-wider">
+                <FileDown className="w-4 h-4 mr-1" /> PDF
+              </Button>
+              <Button onClick={exportBrief} variant="outline" className="font-mono text-xs uppercase tracking-wider">
+                <Download className="w-4 h-4 mr-1" /> Markdown
+              </Button>
+            </>
           )}
           <Button onClick={generateBrief} disabled={loading || !context} className="font-mono text-xs uppercase tracking-wider">
             {loading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Brain className="w-4 h-4 mr-1" />}

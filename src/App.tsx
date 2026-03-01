@@ -25,6 +25,7 @@ import HierarchyAnalytics from "./pages/HierarchyAnalytics";
 import IntelBrief from "./pages/IntelBrief";
 import ResourceOptimization from "./pages/ResourceOptimization";
 import WorkloadBalancer from "./pages/WorkloadBalancer";
+import GPSTracking from "./pages/GPSTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ const App = () => (
             <Route path="/intel-brief" element={<ProtectedRoute><IntelBrief /></ProtectedRoute>} />
             <Route path="/resources" element={<ProtectedRoute><ResourceOptimization /></ProtectedRoute>} />
             <Route path="/workload" element={<ProtectedRoute><WorkloadBalancer /></ProtectedRoute>} />
+            <Route path="/gps-tracking" element={<ProtectedRoute><GPSTracking /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale, Satellite } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -30,6 +30,7 @@ const operationsItems = [
 const intelligenceItems = [
   { title: "Readiness", url: "/readiness", icon: Target },
   { title: "Geo Intel", url: "/geo-intel", icon: Map },
+  { title: "GPS Tracking", url: "/gps-tracking", icon: Satellite },
   { title: "Hierarchy", url: "/hierarchy", icon: Layers },
   { title: "Intel Brief", url: "/intel-brief", icon: FileText },
   { title: "Digital Twin", url: "/digital-twin", icon: FlaskConical },

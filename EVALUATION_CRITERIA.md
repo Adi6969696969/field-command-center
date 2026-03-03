@@ -1,5 +1,7 @@
 # 🛡️ FieldOPS — Political Field Intelligence Operating System
 
+![FieldOPS Command Center](src/assets/eval-hero-banner.jpg)
+
 ---
 
 ## 📌 Title
@@ -41,6 +43,8 @@ These gaps result in **wasted resources, strategic blind spots, and lost electio
 ---
 
 ## 🏗️ Architecture
+
+![System Architecture](src/assets/eval-architecture.jpg)
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -113,6 +117,8 @@ These gaps result in **wasted resources, strategic blind spots, and lost electio
 
 ## ⭐ Features / USP
 
+![Features Overview](src/assets/eval-features.jpg)
+
 ### 🎯 Command Center
 | # | Feature | Description |
 |---|---------|-------------|
@@ -169,6 +175,8 @@ These gaps result in **wasted resources, strategic blind spots, and lost electio
 ---
 
 ## 🚀 Impact & Scalability
+
+![Scalability & Impact](src/assets/eval-scalability.jpg)
 
 ### Impact
 - **Operational Efficiency** — AI-driven task assignment reduces manual planning overhead by an estimated 60-70%.

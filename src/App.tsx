@@ -26,6 +26,8 @@ import IntelBrief from "./pages/IntelBrief";
 import ResourceOptimization from "./pages/ResourceOptimization";
 import WorkloadBalancer from "./pages/WorkloadBalancer";
 import GPSTracking from "./pages/GPSTracking";
+import IssueHeatmap from "./pages/IssueHeatmap";
+import PublicSentiment from "./pages/PublicSentiment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -83,6 +85,8 @@ const App = () => (
             <Route path="/resources" element={<ProtectedRoute><ResourceOptimization /></ProtectedRoute>} />
             <Route path="/workload" element={<ProtectedRoute><WorkloadBalancer /></ProtectedRoute>} />
             <Route path="/gps-tracking" element={<ProtectedRoute><GPSTracking /></ProtectedRoute>} />
+            <Route path="/issue-heatmap" element={<ProtectedRoute><IssueHeatmap /></ProtectedRoute>} />
+            <Route path="/public-sentiment" element={<ProtectedRoute><PublicSentiment /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

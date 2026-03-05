@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale, Satellite, Flame, Activity } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale, Satellite, Flame, Activity, UserCheck } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -25,6 +25,7 @@ const operationsItems = [
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Smart Assign", url: "/smart-assign", icon: Brain },
   { title: "Workload", url: "/workload", icon: Scale },
+  { title: "Attendance", url: "/attendance", icon: UserCheck },
 ];
 
 const intelligenceItems = [

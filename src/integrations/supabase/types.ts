@@ -14,6 +14,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      attendance: {
+        Row: {
+          check_in_lat: number | null
+          check_in_lng: number | null
+          check_in_time: string | null
+          check_out_lat: number | null
+          check_out_lng: number | null
+          check_out_time: string | null
+          created_at: string
+          date: string
+          id: string
+          is_gps_verified: boolean | null
+          marked_by: string | null
+          notes: string | null
+          status: string
+          updated_at: string
+          worker_id: string
+        }
+        Insert: {
+          check_in_lat?: number | null
+          check_in_lng?: number | null
+          check_in_time?: string | null
+          check_out_lat?: number | null
+          check_out_lng?: number | null
+          check_out_time?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_gps_verified?: boolean | null
+          marked_by?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          worker_id: string
+        }
+        Update: {
+          check_in_lat?: number | null
+          check_in_lng?: number | null
+          check_in_time?: string | null
+          check_out_lat?: number | null
+          check_out_lng?: number | null
+          check_out_time?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_gps_verified?: boolean | null
+          marked_by?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          worker_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action_type: string

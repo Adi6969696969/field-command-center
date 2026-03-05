@@ -28,6 +28,7 @@ import WorkloadBalancer from "./pages/WorkloadBalancer";
 import GPSTracking from "./pages/GPSTracking";
 import IssueHeatmap from "./pages/IssueHeatmap";
 import PublicSentiment from "./pages/PublicSentiment";
+import Attendance from "./pages/Attendance";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -87,6 +88,7 @@ const App = () => (
             <Route path="/gps-tracking" element={<ProtectedRoute><GPSTracking /></ProtectedRoute>} />
             <Route path="/issue-heatmap" element={<ProtectedRoute><IssueHeatmap /></ProtectedRoute>} />
             <Route path="/public-sentiment" element={<ProtectedRoute><PublicSentiment /></ProtectedRoute>} />
+            <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

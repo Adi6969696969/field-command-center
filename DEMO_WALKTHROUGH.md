@@ -164,7 +164,24 @@
 
 ---
 
-## 🧪 Step 10: Digital Twin & Intel Brief (1 minute)
+## 🗺️ Step 10: Issue Heatmap & Public Sentiment (1.5 minutes)
+
+**Navigate to:** `/issue-heatmap` → `/public-sentiment`
+
+**What to show:**
+1. On `/issue-heatmap` — interactive map with severity-coded circle markers across Indian districts
+2. Use category and severity filters to narrow issues
+3. Show the charts: top districts bar chart, category pie chart, severity distribution
+4. Navigate to `/public-sentiment`
+5. Show the 14-day sentiment trend area chart
+6. Point out topic-based sentiment breakdown and district sentiment leaderboard
+
+**Talking points:**
+> "The Issue Heatmap gives campaign managers a geographic view of field problems — logistics delays, security incidents, infrastructure issues — all color-coded by severity. And Public Sentiment Monitoring tracks how public opinion is trending across districts, with AI-powered analysis of ground-level feedback."
+
+---
+
+## 🧪 Step 11: Digital Twin & Intel Brief (1 minute)
 
 **Navigate to:** `/digital-twin` → `/intel-brief`
 
@@ -180,7 +197,7 @@
 ## 🏁 Closing (30 seconds)
 
 > "To summarize — **FieldOPS** provides:
-> - **26 integrated features** across Command, Operations, Intelligence, and Monitoring
+> - **28 integrated features** across Command, Operations, Intelligence, and Monitoring
 > - **4 AI-powered edge functions** for intelligent automation
 > - **Military-grade security** with role-based access and row-level database policies
 > - **Blockchain-inspired accountability** with tamper-proof audit trails
@@ -219,10 +236,11 @@
 | Readiness Index | 1:00 | 10:30 |
 | War Mode | 0:30 | 11:00 |
 | Monitoring Suite | 1:30 | 12:30 |
-| Digital Twin & Intel Brief | 1:00 | 13:30 |
-| Closing | 0:30 | 14:00 |
+| Issue Heatmap & Pub Sentiment | 1:30 | 14:00 |
+| Digital Twin & Intel Brief | 1:00 | 15:00 |
+| Closing | 0:30 | 15:30 |
 
-> **Total: ~14 minutes** (can be trimmed to 10 by skipping Step 9 quick tour)
+> **Total: ~15.5 minutes** (can be trimmed to 11 by skipping Steps 9–10)
 
 ---
 

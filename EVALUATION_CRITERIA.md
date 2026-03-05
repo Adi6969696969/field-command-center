@@ -147,23 +147,25 @@ These gaps result in **wasted resources, strategic blind spots, and lost electio
 | 15 | **Hierarchy Analytics** | Organizational hierarchy visualization with performance roll-ups across levels |
 | 16 | **Intel Brief** | Consolidated intelligence reports with exportable PDF summaries |
 | 17 | **Digital Twin** | Election-day simulation engine to model scenarios and stress-test campaign strategies |
+| 18 | **Issue Heatmap** | Interactive geographic heatmap of field issues with severity-coded markers, category/severity filters, and statistical distribution charts |
+| 19 | **Public Sentiment** | Real-time public sentiment monitoring with 14-day trend charts, topic-based analysis, district sentiment leaderboard, and AI-powered feedback analysis |
 
 ### 📊 Monitoring
 | # | Feature | Description |
 |---|---------|-------------|
-| 18 | **Leaderboard** | Gamified performance rankings with badges and achievement system |
-| 19 | **Feedback & Sentiment** | AI-powered sentiment analysis of field feedback with topic extraction |
-| 20 | **Burnout Detection** | Proactive worker health monitoring using workload, performance trends, and activity patterns |
-| 21 | **Fraud Detection** | Anomaly detection for suspicious attendance, task completion, and performance patterns |
-| 22 | **Resource Optimization** | Budget and resource allocation analysis with efficiency recommendations |
-| 23 | **Blockchain Ledger** | Immutable, hash-chained audit trail of all field operations for accountability |
+| 20 | **Leaderboard** | Gamified performance rankings with badges and achievement system |
+| 21 | **Feedback & Sentiment** | AI-powered sentiment analysis of field feedback with topic extraction |
+| 22 | **Burnout Detection** | Proactive worker health monitoring using workload, performance trends, and activity patterns |
+| 23 | **Fraud Detection** | Anomaly detection for suspicious attendance, task completion, and performance patterns |
+| 24 | **Resource Optimization** | Budget and resource allocation analysis with efficiency recommendations |
+| 25 | **Blockchain Ledger** | Immutable, hash-chained audit trail of all field operations for accountability |
 
 ### 🔐 Security & Auth
 | # | Feature | Description |
 |---|---------|-------------|
-| 24 | **Role-Based Access Control** | Four roles (Admin, District Head, Booth Head, Volunteer) with granular permissions |
-| 25 | **Row-Level Security** | Database-level policies ensuring users only access authorized data |
-| 26 | **Secure Authentication** | Email/password JWT auth with email verification and session management |
+| 26 | **Role-Based Access Control** | Four roles (Admin, District Head, Booth Head, Volunteer) with granular permissions |
+| 27 | **Row-Level Security** | Database-level policies ensuring users only access authorized data |
+| 28 | **Secure Authentication** | Email/password JWT auth with email verification and session management |
 
 ### 🎨 Unique Selling Points (USPs)
 - **Military-Grade UI** — Dark tactical theme with monospace typography, glowing accents, and grid overlays for an immersive command-center experience.

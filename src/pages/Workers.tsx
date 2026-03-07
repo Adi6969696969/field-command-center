@@ -59,10 +59,14 @@ export default function Workers() {
 
   useEffect(() => { fetchWorkers(); }, []);
 
+  const [creating, setCreating] = useState(false);
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    const { error } = await supabase.from("workers").insert({
+    setCreating(true);
+
+    const workerData = {
       full_name: form.full_name,
       phone: form.phone || null,
       email: form.email || null,
@@ -71,17 +75,47 @@ export default function Workers() {
       constituency: form.constituency || null,
       skills: form.skills ? form.skills.split(",").map((s) => s.trim()) : [],
       experience_level: parseInt(form.experience_level),
-      status: form.status as any,
-      created_by: user.id,
-    });
-    if (error) {
-      toast.error(error.message);
+      status: form.status,
+    };
+
+    // If email is provided, use edge function to auto-create login account
+    if (form.email) {
+      try {
+        const { data, error } = await supabase.functions.invoke("create-worker-account", {
+          body: workerData,
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+
+        if (data?.accountCreated) {
+          toast.success(`Worker added! Login account created for ${form.email}. Temporary password: ${data.tempPassword}`, { duration: 15000 });
+        } else {
+          toast.success(data?.message || "Worker added and linked to existing account.");
+        }
+      } catch (err: any) {
+        toast.error(err.message || "Failed to create worker account");
+        setCreating(false);
+        return;
+      }
     } else {
-      toast.success("Worker added to roster.");
-      setDialogOpen(false);
-      setForm({ full_name: "", phone: "", email: "", booth_assignment: "", district: "", constituency: "", skills: "", experience_level: "1", status: "active" });
-      fetchWorkers();
+      // No email — create worker without auth account
+      const { error } = await supabase.from("workers").insert([{
+        ...workerData,
+        status: workerData.status as "active" | "inactive" | "on_leave" | "suspended",
+        created_by: user.id,
+      }]);
+      if (error) {
+        toast.error(error.message);
+        setCreating(false);
+        return;
+      }
+      toast.success("Worker added to roster (no login account — no email provided).");
     }
+
+    setDialogOpen(false);
+    setForm({ full_name: "", phone: "", email: "", booth_assignment: "", district: "", constituency: "", skills: "", experience_level: "1", status: "active" });
+    fetchWorkers();
+    setCreating(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -175,8 +209,8 @@ export default function Workers() {
                   </Select>
                 </div>
               </div>
-              <Button type="submit" className="w-full font-mono text-xs uppercase tracking-wider">
-                Deploy Operative
+              <Button type="submit" disabled={creating} className="w-full font-mono text-xs uppercase tracking-wider">
+                {creating ? "Creating Account..." : "Deploy Operative"}
               </Button>
             </form>
           </DialogContent>

@@ -123,7 +123,7 @@
 
 ---
 
-## 🎯 Step 7: Readiness Index (1 minute)
+## 🎯 Step 8: Readiness Index (1 minute)
 
 **Navigate to:** `/readiness`
 
@@ -137,7 +137,7 @@
 
 ---
 
-## 🔥 Step 8: War Mode (30 seconds)
+## 🔥 Step 9: War Mode (30 seconds)
 
 **Navigate to:** `/war-mode`
 
@@ -151,7 +151,7 @@
 
 ---
 
-## 📈 Step 9: Monitoring Suite — Quick Tour (1.5 minutes)
+## 📈 Step 10: Monitoring Suite — Quick Tour (1.5 minutes)
 
 **Navigate through:** `/leaderboard` → `/feedback` → `/burnout` → `/fraud-detection` → `/blockchain`
 
@@ -179,7 +179,7 @@
 
 ---
 
-## 🗺️ Step 10: Issue Heatmap & Public Sentiment (1.5 minutes)
+## 🗺️ Step 11: Issue Heatmap & Public Sentiment (1.5 minutes)
 
 **Navigate to:** `/issue-heatmap` → `/public-sentiment`
 
@@ -196,7 +196,7 @@
 
 ---
 
-## 🧪 Step 11: Digital Twin & Intel Brief (1 minute)
+## 🧪 Step 12: Digital Twin & Intel Brief (1 minute)
 
 **Navigate to:** `/digital-twin` → `/intel-brief`
 
@@ -229,6 +229,7 @@
 - [ ] Ensure you have an **Admin** account logged in
 - [ ] Add 5-10 test workers across different districts
 - [ ] Create 3-5 tasks with varying priorities
+- [ ] Mark attendance for 2-3 workers to demo check-in/check-out flow
 - [ ] Submit 2-3 feedback entries for sentiment demo
 - [ ] Test the AI Co-Pilot to verify edge function is responding
 - [ ] Verify GPS Tracking map loads correctly (Leaflet tiles)
@@ -245,17 +246,18 @@
 | Auth & RBAC | 1:00 | 1:30 |
 | War Room Dashboard | 1:30 | 3:00 |
 | Worker Management | 1:30 | 4:30 |
-| Tasks & AI Smart Assign | 2:00 | 6:30 |
-| Geo Intel & GPS Tracking | 2:00 | 8:30 |
-| AI Co-Pilot | 1:00 | 9:30 |
-| Readiness Index | 1:00 | 10:30 |
-| War Mode | 0:30 | 11:00 |
-| Monitoring Suite | 1:30 | 12:30 |
-| Issue Heatmap & Pub Sentiment | 1:30 | 14:00 |
-| Digital Twin & Intel Brief | 1:00 | 15:00 |
-| Closing | 0:30 | 15:30 |
+| Attendance System | 1:30 | 6:00 |
+| Tasks & AI Smart Assign | 2:00 | 8:00 |
+| Geo Intel & GPS Tracking | 2:00 | 10:00 |
+| AI Co-Pilot | 1:00 | 11:00 |
+| Readiness Index | 1:00 | 12:00 |
+| War Mode | 0:30 | 12:30 |
+| Monitoring Suite | 1:30 | 14:00 |
+| Issue Heatmap & Pub Sentiment | 1:30 | 15:30 |
+| Digital Twin & Intel Brief | 1:00 | 16:30 |
+| Closing | 0:30 | 17:00 |
 
-> **Total: ~15.5 minutes** (can be trimmed to 11 by skipping Steps 9–10)
+> **Total: ~17 minutes** (can be trimmed to 12 by skipping Steps 10–11)
 
 ---
 

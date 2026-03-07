@@ -101,6 +101,7 @@ export default function Workers() {
       // No email — create worker without auth account
       const { error } = await supabase.from("workers").insert([{
         ...workerData,
+        status: workerData.status as "active" | "inactive" | "on_leave" | "suspended",
         created_by: user.id,
       }]);
       if (error) {

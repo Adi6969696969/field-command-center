@@ -209,8 +209,8 @@ export default function Workers() {
                   </Select>
                 </div>
               </div>
-              <Button type="submit" className="w-full font-mono text-xs uppercase tracking-wider">
-                Deploy Operative
+              <Button type="submit" disabled={creating} className="w-full font-mono text-xs uppercase tracking-wider">
+                {creating ? "Creating Account..." : "Deploy Operative"}
               </Button>
             </form>
           </DialogContent>

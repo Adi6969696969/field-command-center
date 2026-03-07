@@ -90,7 +90,7 @@
 
 ---
 
-## 🗺️ Step 5: Geo Intel & GPS Tracking (2 minutes)
+## 🗺️ Step 6: Geo Intel & GPS Tracking (2 minutes)
 
 **Navigate to:** `/geo-intel` → then `/gps-tracking`
 
@@ -109,7 +109,7 @@
 
 ---
 
-## 🧠 Step 6: AI Co-Pilot (1 minute)
+## 🧠 Step 7: AI Co-Pilot (1 minute)
 
 **Navigate to:** `/ai-copilot`
 

@@ -58,7 +58,22 @@
 
 ---
 
-## ✅ Step 4: Task Management & AI Smart Assign (2 minutes)
+## 📋 Step 4: Attendance System (1.5 minutes)
+
+**Navigate to:** `/attendance`
+
+**What to show:**
+1. **Mark Attendance** tab — select a worker, show GPS-verified check-in with automatic coordinate capture
+2. Demonstrate **Check Out** for a previously checked-in worker, showing duration calculation
+3. Switch to **Records** tab — show daily attendance log with check-in/out times, GPS verification badges, and duration
+4. Switch to **Analytics** tab — show attendance status distribution chart, district-level attendance rates, and GPS verification stats
+
+**Talking points:**
+> "The Attendance System supports three modes: manual check-in/check-out with GPS verification, daily present/absent marking, and GPS-based auto-attendance when workers enter their geo-fenced areas. Every check-in captures GPS coordinates and is verified against the worker's assigned location. The analytics dashboard gives campaign managers instant visibility into district-level attendance rates and trends."
+
+---
+
+## ✅ Step 5: Task Management & AI Smart Assign (2 minutes)
 
 **Navigate to:** `/tasks` → then `/smart-assign`
 

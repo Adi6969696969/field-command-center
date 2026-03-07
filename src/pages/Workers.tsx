@@ -99,10 +99,10 @@ export default function Workers() {
       }
     } else {
       // No email — create worker without auth account
-      const { error } = await supabase.from("workers").insert({
+      const { error } = await supabase.from("workers").insert([{
         ...workerData,
         created_by: user.id,
-      });
+      }]);
       if (error) {
         toast.error(error.message);
         setCreating(false);

@@ -29,6 +29,7 @@ import GPSTracking from "./pages/GPSTracking";
 import IssueHeatmap from "./pages/IssueHeatmap";
 import PublicSentiment from "./pages/PublicSentiment";
 import Attendance from "./pages/Attendance";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/workers" element={<ProtectedRoute><Workers /></ProtectedRoute>} />
             <Route path="/workers/:id" element={<ProtectedRoute><WorkerProfile /></ProtectedRoute>} />

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Shield, Eye, EyeOff } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 type AppRole = "admin" | "district_head" | "booth_head" | "volunteer";
 
@@ -165,6 +166,29 @@ export default function Auth() {
             >
               {submitting ? "Processing..." : isLogin ? "Authenticate" : "Create Account"}
             </Button>
+            {isLogin && (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!email) {
+                    toast.error("Enter your email first");
+                    return;
+                  }
+                  try {
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                      redirectTo: `${window.location.origin}/reset-password`,
+                    });
+                    if (error) throw error;
+                    toast.success("Password reset link sent to your email");
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to send reset link");
+                  }
+                }}
+                className="w-full text-xs font-mono text-muted-foreground hover:text-primary transition-colors"
+              >
+                Forgot Password?
+              </button>
+            )}
           </form>
         </div>
       </div>

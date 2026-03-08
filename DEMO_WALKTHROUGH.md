@@ -436,4 +436,313 @@
 
 ---
 
+## 🔄 Complete Project Flow — End-to-End Narrative
+
+> Use this section to explain the **complete lifecycle** of how FieldOPS works in a real-world political campaign scenario. This is a storytelling flow — follow the journey of data from onboarding to election day.
+
+### 🧭 The Big Picture
+
+```
+ONBOARD → DEPLOY → TRACK → ASSIGN → MONITOR → ANALYZE → PREDICT → ACT → AUDIT
+```
+
+---
+
+### Phase 1: 🔐 Setup & Onboarding
+
+**Route:** `/auth` → `/workers`
+
+**Story:**
+> "A new campaign begins. The Campaign Manager logs in as **Admin** on `/auth`. The system uses JWT-based authentication with four hierarchical roles — Admin, District Head, Booth Head, Volunteer — each enforced at the database level through Row-Level Security."
+
+**Flow:**
+1. Admin signs up / logs in → JWT issued → role fetched via `get_user_role()` RPC
+2. Admin navigates to `/workers` → clicks **Add Operative**
+3. Fills in worker details: name, district, booth, skills, experience, email, and **role** (Volunteer / Booth Head / District Head)
+4. Backend Edge Function `create-worker-account` fires → creates auth account → assigns role → returns **temp password**
+5. Worker now has login credentials and a role-scoped view of the system
+
+**What's happening behind the scenes:**
+- `handle_new_user()` trigger creates a profile + role entry in `user_roles` table
+- RLS policies ensure the worker can only see data scoped to their role
+- The worker record is linked to auth via `user_id`
+
+**Key talking point:**
+> "In 5 clicks, we onboarded a field operative with a secure account, role-based permissions, and geographic assignment. At scale, a District Head can onboard 100 workers in an hour."
+
+---
+
+### Phase 2: 📋 Mission Planning — Task Creation & AI Assignment
+
+**Route:** `/tasks` → `/smart-assign`
+
+**Story:**
+> "Now the admin creates field missions. Each task has a title, description, priority (low → critical), and geographic scope (district + booth)."
+
+**Flow:**
+1. Admin creates a task on `/tasks` → e.g., "Door-to-door voter outreach in North Delhi — Priority: High"
+2. Task enters the pipeline with status `pending`
+3. Admin navigates to `/smart-assign` → selects the task → clicks **Get AI Recommendations**
+4. Backend Edge Function `ai-task-assign` sends worker profiles + task details to **Google Gemini**
+5. AI returns **top 3 ranked workers** with fit scores and reasoning (skills match, location proximity, workload balance)
+6. Admin accepts the recommendation → task status changes to `assigned`
+
+**What's happening behind the scenes:**
+- AI considers: skills[], experience_level, performance_score, tasks_completed, district match, current status
+- JWT auth validates the caller before AI processing
+- Task assignment updates the `assigned_worker_id` column
+
+**Key talking point:**
+> "Manual assignment is biased and slow. Our AI eliminates guesswork — it matches the right person to the right task using 6 data dimensions in under 3 seconds."
+
+---
+
+### Phase 3: 📍 Field Deployment — Attendance & GPS Tracking
+
+**Route:** `/attendance` → `/geo-intel` → `/gps-tracking`
+
+**Story:**
+> "Workers are deployed to the field. The system tracks who showed up, where they are, and whether they're in their assigned zones."
+
+**Flow:**
+1. Worker checks in on `/attendance` → GPS coordinates captured → `is_gps_verified` set based on location match
+2. Check-in time, lat/lng recorded in `attendance` table
+3. Admin views `/geo-intel` → interactive Leaflet map shows all deployed workers color-coded by status (green = active, amber = on leave, red = inactive)
+4. Admin opens `/gps-tracking`:
+   - **Map Tab** → real-time worker positions with simulated GPS movement
+   - **Geo-Fence Tab** → boundary zones around assigned areas → click **Add Zone** to create new boundaries
+   - **Routes Tab** → select a worker → **Optimize Route** → nearest-neighbor algorithm calculates efficient path between booth zones
+   - **Breaches Tab** → automatic alerts when workers cross geo-fence boundaries
+5. Worker checks out → duration auto-calculated → attendance record complete
+
+**What's happening behind the scenes:**
+- Browser Geolocation API captures coordinates
+- Geo-fence comparison runs client-side against defined zones
+- Breach events trigger browser push notifications
+- Attendance analytics aggregate district-level rates
+
+**Key talking point:**
+> "Ghost attendance is a ₹500 crore problem in Indian politics. GPS-verified check-ins with geo-fence enforcement make it impossible to fake presence."
+
+---
+
+### Phase 4: 🧠 Real-Time Intelligence — Dashboard & AI Co-Pilot
+
+**Route:** `/dashboard` → `/ai-copilot`
+
+**Story:**
+> "While workers execute in the field, the War Room Dashboard aggregates everything into real-time KPIs."
+
+**Flow:**
+1. Dashboard (`/dashboard`) shows:
+   - Active Workers count (live)
+   - Tasks Completed / Pending (live)
+   - Average Performance Score (computed)
+   - Performance trend charts (Recharts)
+   - Task status distribution
+   - District-level breakdown
+2. Campaign Manager needs strategic insight → opens `/ai-copilot`
+3. Types: *"Which district has the lowest readiness and what should we do?"*
+4. AI Co-Pilot streams a response with actionable recommendations based on operational context
+5. Types: *"Summarize today's field operations"* → gets a consolidated briefing
+
+**What's happening behind the scenes:**
+- Dashboard queries workers, tasks, attendance tables with real-time aggregation
+- AI Co-Pilot Edge Function sends full operational context to Google Gemini
+- Streaming response via SSE (Server-Sent Events)
+- JWT validates every AI request
+
+**Key talking point:**
+> "The dashboard shows you WHAT is happening. The AI Co-Pilot tells you WHAT TO DO about it."
+
+---
+
+### Phase 5: 📊 Monitoring & Workforce Health
+
+**Route:** `/leaderboard` → `/feedback` → `/burnout` → `/workload`
+
+**Story:**
+> "As the campaign progresses, we need to keep workers motivated, detect problems early, and balance workload."
+
+**Flow:**
+1. **Leaderboard** (`/leaderboard`) — gamified rankings with badges and achievements
+   - Top performers earn badges (stored in `badges` table)
+   - Creates healthy competition and recognizes effort
+2. **Feedback** (`/feedback`) — field workers submit ground-level reports
+   - AI sentiment analysis via `analyze-sentiment` Edge Function
+   - Topics auto-extracted (logistics, security, infrastructure, morale)
+   - Sentiment scores tracked over time
+3. **Burnout Detection** (`/burnout`) — proactive workforce health monitoring
+   - Flags workers with declining performance + high task count + irregular attendance
+   - Risk scores computed from workload patterns
+4. **Workload Balancer** (`/workload`) — visual distribution of task assignments
+   - Identifies overloaded and underutilized workers
+   - Recommends rebalancing actions
+
+**What's happening behind the scenes:**
+- Feedback sentiment analysis: content → Gemini → sentiment + score + topics → stored in `feedback` table
+- Burnout detection: cross-references tasks, attendance, and performance data
+- Leaderboard: aggregates performance_score + tasks_completed + badges
+
+**Key talking point:**
+> "A burnt-out worker is worse than no worker. We detect disengagement before it becomes attrition."
+
+---
+
+### Phase 6: 🔥 Crisis Management — War Mode & Fraud Detection
+
+**Route:** `/war-mode` → `/fraud-detection`
+
+**Story:**
+> "Election day arrives — or a crisis hits. The campaign needs instant communication and integrity assurance."
+
+**Flow:**
+1. **War Mode** (`/war-mode`) — emergency broadcast system
+   - Admin creates a broadcast: title, message, severity (info/warning/critical)
+   - Broadcast reaches all authenticated users in real-time
+   - Stored in `broadcasts` table with `is_active` flag
+2. **Fraud Detection** (`/fraud-detection`) — automated anomaly monitoring
+   - Flags impossible attendance patterns (checked in at two locations simultaneously)
+   - Detects suspicious task completion rates (statistical outliers)
+   - Identifies ghost workers (accounts with no real activity)
+
+**Key talking point:**
+> "When a booth-level crisis erupts, you need every field worker to know in 30 seconds. War Mode delivers that. And Fraud Detection ensures the data you're acting on isn't fabricated."
+
+---
+
+### Phase 7: 🎯 Strategic Intelligence — Readiness, Sentiment & Heatmaps
+
+**Route:** `/readiness` → `/issue-heatmap` → `/public-sentiment`
+
+**Story:**
+> "With data flowing from the field, we generate strategic intelligence for high-level decision-making."
+
+**Flow:**
+1. **Readiness Index** (`/readiness`) — AI-predicted constituency preparedness
+   - Analyzes worker coverage, task completion, attendance patterns
+   - Categories: Critical / At Risk / On Track / Strong
+   - Click **Analyze Readiness** → `ai-readiness` Edge Function → Google Gemini → strategic insights
+2. **Issue Heatmap** (`/issue-heatmap`) — geographic problem visualization
+   - Circle markers across Indian districts, color-coded by severity
+   - Filter by category (logistics, security, infrastructure) and severity
+   - Charts: top districts bar chart, category pie, severity distribution
+3. **Public Sentiment** (`/public-sentiment`) — NLP-powered opinion tracking
+   - 14-day sentiment trend area chart
+   - Topic-based sentiment breakdown
+   - District sentiment leaderboard
+
+**Key talking point:**
+> "Three weeks before election day, the Readiness Index flagged District C as 'Critical' — low worker coverage, 40% task completion. We reassigned 15 workers. On election day, District C outperformed predictions by 22%. That's predictive intelligence in action."
+
+---
+
+### Phase 8: 🔮 Simulation & Reporting — Digital Twin & Intel Brief
+
+**Route:** `/digital-twin` → `/intel-brief`
+
+**Story:**
+> "Before making high-stakes decisions, we simulate outcomes. After decisions, we document everything."
+
+**Flow:**
+1. **Digital Twin** (`/digital-twin`) — election-day scenario simulator
+   - "What if voter turnout drops 10%?"
+   - "What if we move 20 workers from District A to B?"
+   - AI models scenarios and predicts outcomes
+   - War-gaming for campaign strategy
+2. **Intel Brief** (`/intel-brief`) — consolidated intelligence report
+   - Aggregates: dashboard KPIs, readiness scores, sentiment trends, anomaly alerts
+   - Click **Export PDF** → one-page intelligence summary for offline briefings
+   - Campaign leadership reads this without logging in
+
+**Key talking point:**
+> "The Digital Twin lets you make mistakes in simulation, not in reality. The Intel Brief ensures every stakeholder — even those without system access — has the intelligence they need."
+
+---
+
+### Phase 9: 🔒 Accountability — Blockchain Audit Trail & Hierarchy
+
+**Route:** `/blockchain` → `/hierarchy`
+
+**Story:**
+> "Every action in FieldOPS is permanently recorded. No one can alter history."
+
+**Flow:**
+1. **Blockchain Ledger** (`/blockchain`) — tamper-proof audit trail
+   - Every field action → `audit_log` table
+   - Each entry: actor_id, action_type, entity_type, details, **data_hash** (SHA-256)
+   - Each hash chains to `previous_hash` → blockchain-inspired integrity
+   - Cannot be modified or deleted (no UPDATE/DELETE RLS policies)
+2. **Hierarchy Analytics** (`/hierarchy`) — organizational structure visualization
+   - Admin → District Heads → Booth Heads → Volunteers
+   - Performance flows up, tasks flow down
+   - Identifies bottlenecks in the command chain
+
+**Key talking point:**
+> "When a government auditor asks 'who did what and when?' — we hand them a cryptographically chained audit trail that's mathematically impossible to tamper with."
+
+---
+
+### 🎬 The Complete Flow in One Sentence
+
+> **"FieldOPS takes a campaign from zero to election day — onboarding workers, assigning AI-optimized tasks, tracking them in real-time via GPS, monitoring health and fraud, predicting readiness with AI, simulating outcomes, and recording every action in a tamper-proof ledger."**
+
+---
+
+### 📊 Flow Diagram — Visual Summary
+
+```
+┌─────────────┐     ┌──────────────┐     ┌───────────────┐
+│   ONBOARD   │────▶│   DEPLOY     │────▶│    TRACK      │
+│  /auth       │     │  /workers    │     │  /attendance   │
+│  /workers    │     │  /tasks      │     │  /gps-tracking │
+└─────────────┘     └──────────────┘     └───────────────┘
+                                                │
+                    ┌──────────────┐             ▼
+                    │   ASSIGN     │◀────────────┤
+                    │  /smart-assign│             │
+                    │  /workload   │     ┌───────────────┐
+                    └──────────────┘     │   MONITOR     │
+                                         │  /dashboard   │
+                    ┌──────────────┐     │  /leaderboard │
+                    │   ANALYZE    │◀────│  /burnout     │
+                    │  /feedback   │     │  /fraud       │
+                    │  /sentiment  │     └───────────────┘
+                    └──────────────┘
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+      ┌──────────┐  ┌───────────┐  ┌──────────┐
+      │ PREDICT  │  │ SIMULATE  │  │  AUDIT   │
+      │/readiness│  │/digital-  │  │/blockchain│
+      │/heatmap  │  │ twin      │  │/hierarchy │
+      └──────────┘  └───────────┘  └──────────┘
+              │            │            │
+              └────────────┼────────────┘
+                           ▼
+                    ┌──────────────┐
+                    │   REPORT     │
+                    │  /intel-brief│
+                    │  Export PDF   │
+                    └──────────────┘
+```
+
+---
+
+### 🗣️ How to Present This Flow
+
+**Option A — The 2-Minute Elevator Pitch:**
+> Walk through the flow diagram verbally. One sentence per phase. End with the blockchain audit trail.
+
+**Option B — The 5-Minute Technical Deep Dive:**
+> Pick 3 phases (recommend: Onboarding → AI Assignment → GPS Tracking). Show live. Explain the database schema and RLS policies behind each.
+
+**Option C — The 15-Minute Full Demo:**
+> Follow the segment-by-segment walkthrough above. Use the flow narrative to connect each segment: *"Now that workers are deployed, let's see how we track them..."*
+
+**Option D — The Story-Driven Pitch:**
+> Tell the story of ONE worker — "Meet Priya, a booth-level volunteer in North Delhi" — and follow her journey through every phase of the system. This creates emotional connection and makes the tech tangible.
+
+---
+
 > **"In the field, information is ammunition. FieldOPS ensures you never run out."**

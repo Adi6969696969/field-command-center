@@ -745,4 +745,197 @@ ONBOARD → DEPLOY → TRACK → ASSIGN → MONITOR → ANALYZE → PREDICT → 
 
 ---
 
+## 🎥 5-Minute Video Script — Complete Project Walkthrough
+
+> **Duration:** 5:30 – 6:00 minutes  
+> **Format:** Screen recording with voiceover  
+> **Tip:** Pre-populate data (workers, tasks, feedback, attendance) before recording. No empty states.
+
+---
+
+### 🕐 0:00 – 0:30 | Hook & Problem Statement
+
+**[Screen: Show the `/auth` page with the tactical dark UI]**
+
+> "India runs the world's largest democratic exercise — over 900 million voters, millions of field workers, thousands of constituencies. But here's the problem: all that coordination happens through WhatsApp groups, paper registers, and phone calls.
+>
+> No real-time visibility. No accountability. No intelligence.
+>
+> **FieldOPS** changes that. It's an AI-powered field intelligence operating system — think Palantir, but for democracy."
+
+**[Action: Login with admin credentials]**
+
+---
+
+### 🕐 0:30 – 1:15 | Authentication & Worker Onboarding
+
+**[Screen: Dashboard loads after login → Navigate to `/workers`]**
+
+> "The system uses **four-tier role-based access** — Admin, District Head, Booth Head, and Volunteer. Every permission is enforced at the database level, not just the UI. An Admin sees everything; a Volunteer sees only their assigned data.
+>
+> Let me add a new field operative."
+
+**[Action: Click "Add Operative" → Fill form with name, district, booth, skills, email, role → Submit]**
+
+> "In one click, the system creates a secure login account, assigns the role, and returns temporary credentials. The worker can now log in with their own scoped view. At scale, a District Head can onboard 100 workers in an hour."
+
+**[Action: Show the worker appearing in the list with role badge]**
+
+---
+
+### 🕐 1:15 – 2:15 | Task Management & AI Smart Assignment
+
+**[Screen: Navigate to `/tasks`]**
+
+> "Now let's create a mission — 'Door-to-door voter outreach in North Delhi, Priority: High.'"
+
+**[Action: Create a new task → Show it in the task list with priority badge]**
+
+> "The real innovation is **AI Smart Assign**."
+
+**[Action: Navigate to `/smart-assign` → Select the task → Click "Get AI Recommendations"]**
+
+> "Our backend sends worker profiles and task details to **Google Gemini AI**. It scores every candidate based on six dimensions — skills, experience, location proximity, current workload, performance history, and availability.
+>
+> Look — it returns **ranked recommendations with reasoning**. No bias, no guesswork. In a campaign with thousands of workers, this takes 3 seconds instead of 3 hours."
+
+**[Action: Accept the top recommendation → Show task status change to 'assigned']**
+
+---
+
+### 🕐 2:15 – 3:15 | Field Tracking — Attendance, GPS & Geo-Fencing
+
+**[Screen: Navigate to `/attendance`]**
+
+> "Workers are deployed. Let's track them. The attendance system captures **GPS-verified check-ins** — every check-in records coordinates and validates against the worker's assigned location. No more ghost attendance."
+
+**[Action: Show attendance records with GPS badges and timestamps]**
+
+**[Screen: Navigate to `/gps-tracking`]**
+
+> "GPS Tracking goes deeper. Here's a **live map** of all deployed workers — green for active, amber for on-leave, red for inactive.
+>
+> We define **geo-fence boundaries** around assigned zones. When a worker crosses a boundary —"
+
+**[Action: Show the Geo-Fence tab → Show a defined zone → Switch to Breaches tab]**
+
+> "— the system fires an **instant breach alert**. Real-time accountability without micromanagement."
+
+**[Action: Show the Routes tab → Click "Optimize Route"]**
+
+> "And this — route optimization using a nearest-neighbor algorithm. A district head managing 50 booths can plan the most efficient patrol path in seconds."
+
+---
+
+### 🕐 3:15 – 4:00 | AI Intelligence — Co-Pilot, Readiness & Sentiment
+
+**[Screen: Navigate to `/ai-copilot`]**
+
+> "The AI Co-Pilot is your **strategic advisor**. It has full context — worker data, tasks, attendance, performance. Watch —"
+
+**[Action: Type "Which district has the lowest readiness and what should we do?" → Show streaming AI response]**
+
+> "It doesn't just show data — it tells you **what to do**. That's the difference between a dashboard and an intelligence system."
+
+**[Screen: Navigate to `/readiness`]**
+
+> "The **Readiness Index** predicts how prepared each constituency is for election day. Areas flagged 'Critical' get immediate attention — **proactive, not reactive**."
+
+**[Action: Show readiness scores with risk categories → Click "Analyze Readiness"]**
+
+**[Screen: Quick flash of `/public-sentiment` and `/issue-heatmap`]**
+
+> "Public sentiment tracking uses NLP to analyze ground-level feedback. The issue heatmap visualizes problems geographically — logistics delays, security concerns, infrastructure gaps — all color-coded by severity."
+
+---
+
+### 🕐 4:00 – 4:45 | Crisis Mode, Fraud Detection & Accountability
+
+**[Screen: Navigate to `/war-mode`]**
+
+> "Election day arrives — or a crisis hits. **War Mode** pushes emergency broadcasts to every field worker instantly — info, warning, or critical severity. Think military-grade alert system for democratic operations."
+
+**[Action: Show active broadcasts with severity levels]**
+
+**[Screen: Navigate to `/fraud-detection`]**
+
+> "Meanwhile, **fraud detection** runs in the background — flagging impossible attendance patterns, suspicious task spikes, and statistical outliers. Automated integrity monitoring."
+
+**[Screen: Navigate to `/blockchain`]**
+
+> "And here's the audit trail. Every single field action is recorded with a **SHA-256 hash** chained to the previous entry — blockchain-inspired, tamper-proof. If anyone tries to alter history, the hash chain breaks. When an auditor asks 'who did what and when?' — we hand them **cryptographic proof**."
+
+**[Action: Show hash chain entries in the audit log]**
+
+---
+
+### 🕐 4:45 – 5:15 | Simulation & Reporting
+
+**[Screen: Navigate to `/digital-twin`]**
+
+> "Before making high-stakes decisions, we **simulate**. The Digital Twin models election-day scenarios — what if turnout drops 10%? What if we move 20 workers from Zone A to Zone B? The AI predicts outcomes before you commit real resources."
+
+**[Action: Run a simulation → Show predicted results]**
+
+**[Screen: Navigate to `/intel-brief`]**
+
+> "And finally — the **Intel Brief**. One click generates a comprehensive AI-powered intelligence report. One more click — **exported as PDF** for offline briefings in rural areas with no connectivity."
+
+**[Action: Click "Generate Brief" → Show streaming report → Click "Export PDF"]**
+
+---
+
+### 🕐 5:15 – 5:45 | Closing — The Stack & The Vision
+
+**[Screen: Return to `/dashboard` — War Room overview]**
+
+> "Let's recap what you just saw:
+>
+> ✅ **28+ integrated features** — Command, Operations, Intelligence, Monitoring  
+> ✅ **4 AI-powered backend functions** — Smart Assign, Co-Pilot, Readiness, Sentiment  
+> ✅ **Military-grade security** — JWT auth, 4-tier RBAC, Row-Level Security  
+> ✅ **Blockchain-inspired audit trail** — SHA-256 hash-chained, tamper-proof  
+> ✅ **Real-time everything** — GPS tracking, live dashboards, instant alerts  
+> ✅ **Zero external API dependencies** — all AI runs through Lovable AI Gateway  
+>
+> Built with **React, TypeScript, Tailwind CSS, and Lovable Cloud**.
+>
+> FieldOPS isn't just a tool — it's an **operating system for democratic field operations**. From one constituency to an entire national campaign.
+>
+> **In the field, information is ammunition. FieldOPS ensures you never run out.**"
+
+---
+
+### 🎬 Video Production Tips
+
+| Tip | Details |
+|-----|---------|
+| **Resolution** | Record at 1920×1080, export at 1080p |
+| **Browser** | Use fullscreen, dark mode, hide bookmarks bar |
+| **Voiceover** | Record audio separately for clarity; don't narrate while clicking |
+| **Transitions** | Use fade-to-black between segments (0.5s) |
+| **Music** | Low ambient/cinematic music at 10-15% volume under voiceover |
+| **Captions** | Add segment titles as lower-third text overlays |
+| **Pacing** | Pause 1-2 seconds on AI responses and key visuals for impact |
+| **Data** | Pre-populate 5-10 workers, 5+ tasks, feedback, attendance before recording |
+| **Rehearsal** | Do 2 dry runs — one for flow, one for timing |
+| **Outro** | End with team name, hackathon name, and project URL on a black screen |
+
+### ⏱️ Timing Breakdown
+
+| Segment | Duration | Cumulative |
+|---------|----------|------------|
+| Hook & Problem | 0:30 | 0:30 |
+| Auth & Onboarding | 0:45 | 1:15 |
+| Tasks & AI Assign | 1:00 | 2:15 |
+| GPS & Geo-Fencing | 1:00 | 3:15 |
+| AI Intelligence | 0:45 | 4:00 |
+| Crisis & Accountability | 0:45 | 4:45 |
+| Simulation & Reporting | 0:30 | 5:15 |
+| Closing | 0:30 | 5:45 |
+
+> **Total: ~5:45** — leaves 15 seconds buffer for natural pacing.
+
+---
+
 > **"In the field, information is ammunition. FieldOPS ensures you never run out."**

@@ -1,4 +1,4 @@
-import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale, Satellite, Flame, Activity, UserCheck } from "lucide-react";
+import { Shield, LayoutDashboard, Users, ClipboardList, LogOut, Map, Brain, Trophy, MessageSquare, ShieldAlert, Bot, Target, Heart, Radio, FlaskConical, Lock, Layers, FileText, DollarSign, Scale, Satellite, Flame, Activity, UserCheck, KeyRound } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -109,13 +109,23 @@ export function AppSidebar() {
         <div className="text-[10px] font-mono text-muted-foreground truncate mb-2">
           {user?.email}
         </div>
-        <button
-          onClick={signOut}
-          className="flex items-center gap-2 text-xs font-mono text-muted-foreground hover:text-destructive transition-colors w-full"
-        >
-          <LogOut className="w-3 h-3" />
-          SIGN OUT
-        </button>
+        <div className="flex flex-col gap-1">
+          <NavLink
+            to="/change-password"
+            className="flex items-center gap-2 text-xs font-mono text-muted-foreground hover:text-primary transition-colors w-full"
+            activeClassName="text-primary"
+          >
+            <KeyRound className="w-3 h-3" />
+            CHANGE PASSWORD
+          </NavLink>
+          <button
+            onClick={signOut}
+            className="flex items-center gap-2 text-xs font-mono text-muted-foreground hover:text-destructive transition-colors w-full"
+          >
+            <LogOut className="w-3 h-3" />
+            SIGN OUT
+          </button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

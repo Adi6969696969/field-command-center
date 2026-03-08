@@ -30,6 +30,7 @@ import IssueHeatmap from "./pages/IssueHeatmap";
 import PublicSentiment from "./pages/PublicSentiment";
 import Attendance from "./pages/Attendance";
 import ResetPassword from "./pages/ResetPassword";
+import ChangePassword from "./pages/ChangePassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,6 +92,7 @@ const App = () => (
             <Route path="/issue-heatmap" element={<ProtectedRoute><IssueHeatmap /></ProtectedRoute>} />
             <Route path="/public-sentiment" element={<ProtectedRoute><PublicSentiment /></ProtectedRoute>} />
             <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

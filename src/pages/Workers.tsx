@@ -44,7 +44,7 @@ export default function Workers() {
   const [form, setForm] = useState({
     full_name: "", phone: "", email: "", booth_assignment: "",
     district: "", constituency: "", skills: "", experience_level: "1",
-    status: "active" as string,
+    status: "active" as string, role: "volunteer" as string,
   });
 
   const fetchWorkers = async () => {
@@ -76,6 +76,7 @@ export default function Workers() {
       skills: form.skills ? form.skills.split(",").map((s) => s.trim()) : [],
       experience_level: parseInt(form.experience_level),
       status: form.status,
+      role: form.role,
     };
 
     // If email is provided, use edge function to auto-create login account
@@ -113,7 +114,7 @@ export default function Workers() {
     }
 
     setDialogOpen(false);
-    setForm({ full_name: "", phone: "", email: "", booth_assignment: "", district: "", constituency: "", skills: "", experience_level: "1", status: "active" });
+    setForm({ full_name: "", phone: "", email: "", booth_assignment: "", district: "", constituency: "", skills: "", experience_level: "1", status: "active", role: "volunteer" });
     fetchWorkers();
     setCreating(false);
   };
@@ -187,7 +188,17 @@ export default function Workers() {
                 <Label className="text-[10px] font-mono uppercase text-muted-foreground">Skills (comma-separated)</Label>
                 <Input value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} placeholder="canvassing, data entry, logistics" className="bg-muted border-border font-mono text-sm" />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <Label className="text-[10px] font-mono uppercase text-muted-foreground">Role</Label>
+                  <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v })}>
+                    <SelectTrigger className="bg-muted border-border font-mono text-sm"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="volunteer">Volunteer</SelectItem>
+                      <SelectItem value="booth_head">Booth Head</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div>
                   <Label className="text-[10px] font-mono uppercase text-muted-foreground">Experience (1-5)</Label>
                   <Select value={form.experience_level} onValueChange={(v) => setForm({ ...form, experience_level: v })}>

@@ -46,7 +46,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { email, full_name, phone, district, booth_assignment, constituency, skills, experience_level, status } = await req.json();
+    const { email, full_name, phone, district, booth_assignment, constituency, skills, experience_level, status, role } = await req.json();
+    const workerRole = role || "volunteer";
 
     if (!email || !full_name) {
       return new Response(JSON.stringify({ error: "Email and full name are required" }), {
@@ -66,7 +67,7 @@ Deno.serve(async (req) => {
       email,
       password: tempPassword,
       email_confirm: true,
-      user_metadata: { full_name, role: "volunteer" },
+      user_metadata: { full_name, role: workerRole },
     });
 
     if (authError) {

@@ -25,7 +25,22 @@ interface Worker {
   performance_score: number;
   tasks_completed: number;
   created_at: string;
+  user_id: string | null;
 }
+
+const ROLE_STYLES: Record<string, string> = {
+  volunteer: "bg-accent/10 text-accent border-accent/30",
+  booth_head: "bg-primary/10 text-primary border-primary/30",
+  district_head: "bg-chart-4/10 text-chart-4 border-chart-4/30",
+  admin: "bg-destructive/10 text-destructive border-destructive/30",
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  volunteer: "Volunteer",
+  booth_head: "Booth Head",
+  district_head: "District Head",
+  admin: "Admin",
+};
 
 const STATUS_STYLES: Record<string, string> = {
   active: "bg-primary/10 text-primary border-primary/30",
@@ -38,6 +53,7 @@ export default function Workers() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [workers, setWorkers] = useState<Worker[]>([]);
+  const [workerRoles, setWorkerRoles] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -53,7 +69,22 @@ export default function Workers() {
       .select("*")
       .order("created_at", { ascending: false });
     if (error) toast.error(error.message);
-    else setWorkers(data || []);
+    else {
+      setWorkers(data || []);
+      // Fetch roles for workers that have user_id
+      const userIds = (data || []).map(w => w.user_id).filter(Boolean) as string[];
+      if (userIds.length > 0) {
+        const { data: roles } = await supabase
+          .from("user_roles")
+          .select("user_id, role")
+          .in("user_id", userIds);
+        if (roles) {
+          const roleMap: Record<string, string> = {};
+          roles.forEach(r => { roleMap[r.user_id] = r.role; });
+          setWorkerRoles(roleMap);
+        }
+      }
+    }
     setLoading(false);
   };
 
@@ -196,6 +227,7 @@ export default function Workers() {
                     <SelectContent>
                       <SelectItem value="volunteer">Volunteer</SelectItem>
                       <SelectItem value="booth_head">Booth Head</SelectItem>
+                      <SelectItem value="district_head">District Head</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -255,11 +287,16 @@ export default function Workers() {
                 <UserCircle className="w-6 h-6 text-muted-foreground" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-mono font-semibold text-sm text-foreground truncate">{w.full_name}</p>
                   <Badge variant="outline" className={`text-[10px] font-mono ${STATUS_STYLES[w.status] || ""}`}>
                     {w.status.replace("_", " ")}
                   </Badge>
+                  {w.user_id && workerRoles[w.user_id] && (
+                    <Badge variant="outline" className={`text-[10px] font-mono ${ROLE_STYLES[workerRoles[w.user_id]] || ""}`}>
+                      {ROLE_LABELS[workerRoles[w.user_id]] || workerRoles[w.user_id]}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-[10px] font-mono text-muted-foreground mt-0.5">
                   {[w.district, w.booth_assignment, w.constituency].filter(Boolean).join(" · ") || "No assignment"}

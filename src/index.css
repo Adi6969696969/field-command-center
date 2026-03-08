@@ -121,3 +121,79 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(160 100% 40% / 0.5);
 }
+
+/* Intel Brief styled content */
+.intel-brief-content {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: hsl(var(--foreground));
+}
+.intel-brief-content .brief-h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+  margin: 1.5rem 0 0.75rem;
+  letter-spacing: 0.05em;
+}
+.intel-brief-content .brief-h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+  margin: 1.75rem 0 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.25);
+  letter-spacing: 0.04em;
+}
+.intel-brief-content .brief-h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 1.25rem 0 0.4rem;
+}
+.intel-brief-content .brief-p {
+  margin: 0.35rem 0;
+}
+.intel-brief-content .brief-ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+.intel-brief-content .brief-ul li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin: 0.3rem 0;
+}
+.intel-brief-content .brief-ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: hsl(var(--primary));
+  font-weight: 700;
+}
+.intel-brief-content .brief-ul li.brief-ol {
+  padding-left: 1.5rem;
+  counter-increment: brief-counter;
+}
+.intel-brief-content .brief-ul li.brief-ol::before {
+  content: counter(brief-counter) ".";
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+.intel-brief-content .brief-hr {
+  border: none;
+  height: 1px;
+  background: hsl(var(--border));
+  margin: 1.5rem 0;
+}
+.intel-brief-content strong {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+.intel-brief-content em {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}

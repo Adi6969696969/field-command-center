@@ -1,9 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, FileText, Download, Brain, FileDown } from "lucide-react";
 import jsPDF from "jspdf";
+
+/** Simple markdown → HTML converter for the brief display */
+function renderMarkdown(md: string): string {
+  return md
+    // Escape HTML
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    // Headers
+    .replace(/^### (.+)$/gm, '<h3 class="brief-h3">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 class="brief-h2">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 class="brief-h1">$1</h1>')
+    // Bold & italic
+    .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    // Horizontal rule
+    .replace(/^---$/gm, '<hr class="brief-hr" />')
+    // Bullet lists (- or *)
+    .replace(/^[\-\*] (.+)$/gm, '<li>$1</li>')
+    // Numbered lists
+    .replace(/^\d+\.\s+(.+)$/gm, '<li class="brief-ol">$1</li>')
+    // Wrap consecutive <li> in <ul>
+    .replace(/((?:<li[^>]*>.*<\/li>\n?)+)/g, '<ul class="brief-ul">$1</ul>')
+    // Paragraphs — wrap non-tag lines with content
+    .replace(/^(?!<[hulo]|<hr|<li)(.+)$/gm, '<p class="brief-p">$1</p>')
+    // Clean up empty paragraphs
+    .replace(/<p class="brief-p">\s*<\/p>/g, "");
+}
+
+/** Strip markdown to clean plain text for PDF */
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*\*(.+?)\*\*\*/g, "$1")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/^#{1,3}\s+/gm, "")
+    .replace(/^[\-\*]\s+/gm, "• ")
+    .replace(/^\d+\.\s+/gm, "")
+    .replace(/^---$/gm, "")
+    .trim();
+}
 
 export default function IntelBrief() {
   const [brief, setBrief] = useState("");
@@ -44,32 +87,41 @@ export default function IntelBrief() {
           body: JSON.stringify({
             messages: [{
               role: "user",
-              content: `Generate a comprehensive weekly intelligence briefing report with the following sections:
+              content: `Generate a comprehensive weekly intelligence briefing report. Use clean, professional language without any special symbols, asterisks for decoration, or unnecessary formatting characters.
+
+Structure the report with these sections using markdown headers:
 
 ## Executive Summary
-Key highlights of the week
+Provide 3-4 key highlights in clear sentences.
 
 ## Operational Status
-- Total workers and their status breakdown
-- Task completion rates
-- Performance trends
+- Total workforce count and active/inactive breakdown
+- Task completion rates and pending workload
+- Performance trends across the team
 
 ## District-Level Analysis
-Performance by district with specific metrics
+Break down performance metrics by district with specific numbers.
 
 ## Sentiment Analysis
-Ground feedback trends, top issues, sentiment distribution
+Summarize ground-level feedback trends, top issues raised, and overall sentiment.
 
 ## Risk Assessment
-Critical areas, resource gaps, potential problems
+Identify 3-5 critical risk areas with brief explanations.
 
 ## Strategic Recommendations
-Top 5 actionable recommendations for the coming week
+List 5 actionable recommendations for the coming week as numbered items.
 
 ## Readiness Score
-Overall campaign readiness percentage with justification
+Provide an overall campaign readiness percentage with a one-line justification.
 
-Format as a clean markdown document. Be specific with numbers from the data provided.`,
+Rules:
+- Use clean bullet points (- ) for lists
+- Use numbered lists (1. 2. 3.) for recommendations
+- Bold important metrics with **value**
+- Do NOT use decorative symbols like ★ ✦ ⚡ 🔥 or similar
+- Do NOT use triple asterisks or excessive formatting
+- Keep language professional and concise
+- Use actual numbers from the data provided`,
             }],
             context,
           }),
@@ -133,82 +185,107 @@ Format as a clean markdown document. Be specific with numbers from the data prov
     const maxWidth = pageWidth - margin * 2;
     let y = 20;
 
-    // Title
+    const addPage = () => { doc.addPage(); y = 20; };
+    const checkPage = (needed: number) => { if (y + needed > 275) addPage(); };
+
+    // Title block
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.setTextColor(0, 204, 102);
+    doc.setFontSize(20);
+    doc.setTextColor(0, 180, 90);
     doc.text("INTEL BRIEF", margin, y);
-    y += 8;
+    y += 7;
     doc.setFontSize(9);
-    doc.setTextColor(150, 150, 150);
-    doc.text(`Generated: ${new Date().toLocaleDateString()} | FieldOps Intelligence`, margin, y);
+    doc.setTextColor(120, 120, 120);
+    doc.text(`Generated: ${new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`, margin, y);
     y += 4;
-    doc.setDrawColor(0, 204, 102);
-    doc.setLineWidth(0.5);
+    doc.text("FieldOps Political Field Intelligence System", margin, y);
+    y += 5;
+    doc.setDrawColor(0, 180, 90);
+    doc.setLineWidth(0.6);
     doc.line(margin, y, pageWidth - margin, y);
     y += 10;
 
-    // Body
-    doc.setTextColor(40, 40, 40);
-    const lines = brief.split("\n");
+    const cleanLines = stripMarkdown(brief).split("\n");
 
-    for (const line of lines) {
-      if (y > 275) {
-        doc.addPage();
-        y = 20;
-      }
+    for (const raw of cleanLines) {
+      const line = raw.trim();
+      if (!line) { y += 3; continue; }
 
-      if (line.startsWith("## ")) {
+      // Detect original headers from the brief
+      const origLine = brief.split("\n").find(l => l.replace(/^#{1,3}\s+/, "").trim() === line);
+      const isH1 = origLine?.startsWith("# ");
+      const isH2 = origLine?.startsWith("## ");
+      const isH3 = origLine?.startsWith("### ");
+
+      if (isH1) {
+        checkPage(14);
         y += 4;
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(13);
-        doc.setTextColor(0, 150, 80);
-        doc.text(line.replace("## ", ""), margin, y);
-        y += 7;
-      } else if (line.startsWith("# ")) {
-        doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
-        doc.setTextColor(0, 204, 102);
-        doc.text(line.replace("# ", ""), margin, y);
+        doc.setTextColor(0, 180, 90);
+        doc.text(line, margin, y);
         y += 9;
-      } else if (line.startsWith("- ")) {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.setTextColor(40, 40, 40);
-        const wrapped = doc.splitTextToSize(`• ${line.slice(2)}`, maxWidth - 5);
-        doc.text(wrapped, margin + 3, y);
-        y += wrapped.length * 5;
-      } else if (line.trim() === "") {
+      } else if (isH2) {
+        checkPage(12);
+        y += 5;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.setTextColor(0, 140, 70);
+        doc.text(line, margin, y);
+        y += 2;
+        doc.setDrawColor(0, 140, 70);
+        doc.setLineWidth(0.3);
+        doc.line(margin, y, margin + doc.getTextWidth(line), y);
+        y += 6;
+      } else if (isH3) {
+        checkPage(10);
         y += 3;
-      } else {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(60, 60, 60);
+        doc.text(line, margin, y);
+        y += 6;
+      } else if (line.startsWith("•")) {
+        checkPage(8);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        doc.setTextColor(40, 40, 40);
-        const wrapped = doc.splitTextToSize(line.replace(/\*\*/g, ""), maxWidth);
+        doc.setTextColor(50, 50, 50);
+        const wrapped = doc.splitTextToSize(line, maxWidth - 6);
+        doc.text(wrapped, margin + 4, y);
+        y += wrapped.length * 5;
+      } else {
+        checkPage(8);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        const wrapped = doc.splitTextToSize(line, maxWidth);
         doc.text(wrapped, margin, y);
         y += wrapped.length * 5;
       }
     }
 
-    // Footer on last page
+    // Footer on every page
     const pageCount = doc.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      doc.text(`FieldOps Intel Brief — Page ${i}/${pageCount}`, margin, 290);
+      doc.text(`FieldOps Intel Brief — Page ${i} of ${pageCount}`, margin, 290);
+      doc.text("CLASSIFIED — FOR INTERNAL USE ONLY", pageWidth - margin - 55, 290);
     }
 
     doc.save(`intel-brief-${new Date().toISOString().slice(0, 10)}.pdf`);
     toast.success("Brief exported as PDF");
   };
 
+  const renderedHtml = useMemo(() => renderMarkdown(brief), [brief]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold font-mono tracking-wider text-foreground">
-            INTEL <span className="text-accent">BRIEF</span>
+            INTEL <span className="text-primary">BRIEF</span>
           </h1>
           <p className="text-xs font-mono text-muted-foreground mt-1">AI-generated weekly intelligence report</p>
         </div>
@@ -231,14 +308,15 @@ Format as a clean markdown document. Be specific with numbers from the data prov
       </div>
 
       {brief ? (
-        <div className="bg-card border border-border rounded-lg p-6">
-          <div className="prose prose-invert prose-sm max-w-none font-mono text-foreground">
-            <div className="whitespace-pre-wrap text-sm leading-relaxed">{brief}</div>
-          </div>
+        <div className="bg-card border border-border rounded-lg p-8">
+          <div
+            className="intel-brief-content"
+            dangerouslySetInnerHTML={{ __html: renderedHtml }}
+          />
         </div>
       ) : (
         <div className="text-center py-20">
-          <FileText className="w-16 h-16 mx-auto text-accent mb-4" />
+          <FileText className="w-16 h-16 mx-auto text-primary/40 mb-4" />
           <p className="text-sm font-mono text-muted-foreground">Click "Generate Brief" to create an AI-powered intelligence report</p>
           <p className="text-[10px] font-mono text-muted-foreground mt-1">Uses real-time operational data for analysis</p>
         </div>

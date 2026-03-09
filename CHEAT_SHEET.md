@@ -35,6 +35,8 @@
 - **If asked about testing**: "Vitest for unit tests, TypeScript for compile-time safety, and ESLint for code quality standards."
 - **If asked about deployment**: "One-click deploy via Lovable — frontend, backend, database, and edge functions all deploy together."
 - **If challenged on 'blockchain'**: "It's blockchain-*inspired* — hash-chained records for tamper detection without the overhead of consensus mechanisms or distributed ledgers."
+- **If asked about access control granularity**: "Attendance marking is admin-only, worker deletion is admin-only, broadcasts require admin or district head role — all enforced at both UI and database level via RLS."
+- **If asked about crisis management**: "War Mode supports full crisis lifecycle — one-click activation broadcasts emergency alerts to all operatives, and one-click deactivation sends a stand-down notice and clears the crisis state."
 
 ---
 

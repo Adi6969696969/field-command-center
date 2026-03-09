@@ -125,17 +125,18 @@ These gaps result in **wasted resources, strategic blind spots, and lost electio
 | # | Feature | Description |
 |---|---------|-------------|
 | 1 | **War Room Dashboard** | Real-time KPIs — active workers, task completion rates, pending tasks, performance scores with animated stat cards |
-| 2 | **War Mode** | Emergency broadcast system with severity levels (info/warning/critical) for rapid field coordination |
+| 2 | **War Mode** | Emergency broadcast system with severity levels (info/warning/critical/emergency), one-click crisis activation/deactivation, crisis-active banner with inline stand-down option |
 | 3 | **AI Co-Pilot** | Conversational AI assistant for campaign strategy queries, data analysis, and operational recommendations |
 
 ### 👥 Operations
 | # | Feature | Description |
 |---|---------|-------------|
-| 4 | **Worker Management** | Full CRUD for field workers with skills, districts, booth assignments, performance tracking |
+| 4 | **Worker Management** | Full CRUD for field workers with skills, districts, booth assignments, performance tracking, admin-only delete |
 | 5 | **Worker Profiles** | Detailed individual profiles with performance history, badges, task completion stats |
-| 6 | **Task Management** | Create, assign, track tasks with priority levels (low/medium/high/critical) and status workflows |
+| 6 | **Task Management** | Create, edit, delete, assign, track tasks with priority levels (low/medium/high/critical) and status workflows |
 | 7 | **AI Smart Assign** | AI-powered task-to-worker matching based on skills, experience, location, and current workload |
 | 8 | **Workload Balancer** | Visual workload distribution analysis to prevent over-assignment and optimize capacity |
+| 9 | **Attendance System** | GPS-verified attendance with admin-only marking, check-in/check-out, records, and analytics |
 
 ### 🗺️ Intelligence
 | # | Feature | Description |

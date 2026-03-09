@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Clock, CheckCircle, AlertCircle, XCircle, Loader2 } from "lucide-react";
+import { Plus, Clock, CheckCircle, AlertCircle, XCircle, Loader2, Pencil, Trash2 } from "lucide-react";
 
 interface Task {
   id: string;
@@ -47,14 +47,15 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: "bg-muted text-muted-foreground",
 };
 
+const EMPTY_FORM = { title: "", description: "", priority: "medium", booth: "", district: "", due_date: "" };
+
 export default function Tasks() {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState({
-    title: "", description: "", priority: "medium", booth: "", district: "", due_date: "",
-  });
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const fetchTasks = async () => {
     const { data, error } = await supabase.from("tasks").select("*").order("created_at", { ascending: false });
@@ -65,23 +66,71 @@ export default function Tasks() {
 
   useEffect(() => { fetchTasks(); }, []);
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const openCreate = () => {
+    setEditingTask(null);
+    setForm(EMPTY_FORM);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (t: Task) => {
+    setEditingTask(t);
+    setForm({
+      title: t.title,
+      description: t.description || "",
+      priority: t.priority,
+      booth: t.booth || "",
+      district: t.district || "",
+      due_date: t.due_date ? t.due_date.slice(0, 16) : "",
+    });
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    const { error } = await supabase.from("tasks").insert({
-      title: form.title,
-      description: form.description || null,
-      priority: form.priority as any,
-      booth: form.booth || null,
-      district: form.district || null,
-      due_date: form.due_date || null,
-      created_by: user.id,
-    });
+
+    if (editingTask) {
+      const { error } = await supabase.from("tasks").update({
+        title: form.title,
+        description: form.description || null,
+        priority: form.priority as any,
+        booth: form.booth || null,
+        district: form.district || null,
+        due_date: form.due_date || null,
+      }).eq("id", editingTask.id);
+      if (error) toast.error(error.message);
+      else {
+        toast.success("Task updated.");
+        setDialogOpen(false);
+        setEditingTask(null);
+        setForm(EMPTY_FORM);
+        fetchTasks();
+      }
+    } else {
+      const { error } = await supabase.from("tasks").insert({
+        title: form.title,
+        description: form.description || null,
+        priority: form.priority as any,
+        booth: form.booth || null,
+        district: form.district || null,
+        due_date: form.due_date || null,
+        created_by: user.id,
+      });
+      if (error) toast.error(error.message);
+      else {
+        toast.success("Task deployed.");
+        setDialogOpen(false);
+        setForm(EMPTY_FORM);
+        fetchTasks();
+      }
+    }
+  };
+
+  const deleteTask = async (id: string) => {
+    const { error } = await supabase.from("tasks").delete().eq("id", id);
     if (error) toast.error(error.message);
     else {
-      toast.success("Task deployed.");
-      setDialogOpen(false);
-      setForm({ title: "", description: "", priority: "medium", booth: "", district: "", due_date: "" });
+      toast.success("Task deleted.");
       fetchTasks();
     }
   };
@@ -108,19 +157,19 @@ export default function Tasks() {
             {tasks.length} operations deployed
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) { setEditingTask(null); setForm(EMPTY_FORM); } }}>
           <DialogTrigger asChild>
-            <Button className="font-mono text-xs uppercase tracking-wider">
+            <Button onClick={openCreate} className="font-mono text-xs uppercase tracking-wider">
               <Plus className="w-4 h-4 mr-1" /> New Task
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-card border-border max-w-md">
             <DialogHeader>
               <DialogTitle className="font-mono text-sm uppercase tracking-wider text-foreground">
-                Deploy Operation
+                {editingTask ? "Edit Operation" : "Deploy Operation"}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <Label className="text-[10px] font-mono uppercase text-muted-foreground">Title *</Label>
                 <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="bg-muted border-border font-mono text-sm" />
@@ -156,7 +205,7 @@ export default function Tasks() {
                 <Input type="datetime-local" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} className="bg-muted border-border font-mono text-sm" />
               </div>
               <Button type="submit" className="w-full font-mono text-xs uppercase tracking-wider">
-                Deploy Task
+                {editingTask ? "Update Task" : "Deploy Task"}
               </Button>
             </form>
           </DialogContent>
@@ -200,20 +249,28 @@ export default function Tasks() {
                       {t.due_date && ` · Due: ${new Date(t.due_date).toLocaleDateString()}`}
                     </p>
                   </div>
-                  {t.status !== "completed" && t.status !== "cancelled" && (
-                    <Select value={t.status} onValueChange={(v) => updateStatus(t.id, v)}>
-                      <SelectTrigger className="w-32 bg-muted border-border font-mono text-[10px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="assigned">Assigned</SelectItem>
-                        <SelectItem value="in_progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                        <SelectItem value="cancelled">Cancelled</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(t)}>
+                      <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => deleteTask(t.id)}>
+                      <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                    </Button>
+                    {t.status !== "completed" && t.status !== "cancelled" && (
+                      <Select value={t.status} onValueChange={(v) => updateStatus(t.id, v)}>
+                        <SelectTrigger className="w-32 bg-muted border-border font-mono text-[10px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="assigned">Assigned</SelectItem>
+                          <SelectItem value="in_progress">In Progress</SelectItem>
+                          <SelectItem value="completed">Completed</SelectItem>
+                          <SelectItem value="cancelled">Cancelled</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </div>
                 </div>
               </div>
             );

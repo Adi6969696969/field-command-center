@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Radio, AlertTriangle, Shield, Siren, Send, Volume2 } from "lucide-react";
+import { Radio, AlertTriangle, Shield, Siren, Send, Volume2, ShieldOff } from "lucide-react";
 
 interface Broadcast {
   id: string;
@@ -57,7 +57,7 @@ export default function WarMode() {
 
     const channel = supabase
       .channel("war-broadcasts")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "broadcasts" }, () => fetchBroadcasts())
+      .on("postgres_changes", { event: "*", schema: "public", table: "broadcasts" }, () => fetchBroadcasts())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
@@ -94,6 +94,27 @@ export default function WarMode() {
     }
   };
 
+  const deactivateCrisis = async () => {
+    if (!user) return;
+    // Deactivate all active emergency broadcasts
+    const emergencyBroadcasts = broadcasts.filter((b) => b.severity === "emergency" && b.is_active);
+    const updates = emergencyBroadcasts.map((b) =>
+      supabase.from("broadcasts").update({ is_active: false }).eq("id", b.id)
+    );
+    await Promise.all(updates);
+
+    // Send a stand-down broadcast
+    await supabase.from("broadcasts").insert({
+      title: "✅ CRISIS MODE DEACTIVATED",
+      message: "Emergency stand-down. Crisis mode has been cleared. Resume normal operations.",
+      severity: "info",
+      created_by: user.id,
+    });
+
+    toast.success("Crisis mode deactivated. All clear.");
+    fetchBroadcasts();
+  };
+
   const deactivateBroadcast = async (id: string) => {
     await supabase.from("broadcasts").update({ is_active: false }).eq("id", id);
     fetchBroadcasts();
@@ -108,10 +129,31 @@ export default function WarMode() {
           </h1>
           <p className="text-xs font-mono text-muted-foreground mt-1">Real-time command & broadcast center</p>
         </div>
-        <Button onClick={activateCrisis} variant="destructive" className="font-mono text-xs uppercase tracking-wider">
-          <Siren className="w-4 h-4 mr-1" /> Crisis Mode
-        </Button>
+        <div className="flex gap-2">
+          {crisisMode ? (
+            <Button onClick={deactivateCrisis} variant="outline" className="font-mono text-xs uppercase tracking-wider border-primary text-primary hover:bg-primary/10">
+              <ShieldOff className="w-4 h-4 mr-1" /> Stop Crisis
+            </Button>
+          ) : (
+            <Button onClick={activateCrisis} variant="destructive" className="font-mono text-xs uppercase tracking-wider">
+              <Siren className="w-4 h-4 mr-1" /> Crisis Mode
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Crisis active banner */}
+      {crisisMode && (
+        <div className="bg-destructive/10 border border-destructive/40 rounded-lg p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Siren className="w-5 h-5 text-destructive animate-pulse" />
+            <p className="font-mono text-sm font-bold text-destructive">CRISIS MODE ACTIVE — Emergency protocols engaged</p>
+          </div>
+          <Button onClick={deactivateCrisis} size="sm" variant="outline" className="font-mono text-[10px] border-destructive/30 text-destructive hover:bg-destructive/10">
+            Stand Down
+          </Button>
+        </div>
+      )}
 
       {/* Live stats */}
       <div className="grid grid-cols-3 gap-3">

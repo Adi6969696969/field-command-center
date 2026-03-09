@@ -49,8 +49,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof
 const PIE_COLORS = ["hsl(var(--primary))", "#ef4444", "#3b82f6", "#f59e0b", "#f97316"];
 
 export default function Attendance() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { toast } = useToast();
+  const isAdmin = role === "admin";
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));

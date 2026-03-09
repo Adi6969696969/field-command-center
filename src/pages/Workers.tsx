@@ -50,7 +50,8 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function Workers() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
+  const isAdmin = role === "admin";
   const navigate = useNavigate();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [workerRoles, setWorkerRoles] = useState<Record<string, string>>({});

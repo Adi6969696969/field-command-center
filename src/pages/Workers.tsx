@@ -320,9 +320,11 @@ export default function Workers() {
               <button onClick={() => navigate(`/workers/${w.id}`)} className="text-muted-foreground hover:text-accent transition-colors" title="View Profile">
                 <Eye className="w-4 h-4" />
               </button>
-              <button onClick={() => handleDelete(w.id)} className="text-muted-foreground hover:text-destructive transition-colors" title="Delete">
-                <Trash2 className="w-4 h-4" />
-              </button>
+              {isAdmin && (
+                <button onClick={() => handleDelete(w.id)} className="text-muted-foreground hover:text-destructive transition-colors" title="Delete">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
           ))}
         </div>

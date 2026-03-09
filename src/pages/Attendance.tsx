@@ -292,30 +292,34 @@ export default function Attendance() {
                             )}
                           </TableCell>
                           <TableCell>
-                            <div className="flex gap-1 flex-wrap">
-                              {["present", "absent", "late", "on_leave", "half_day"].map((s) => (
-                                <Button
-                                  key={s}
-                                  size="sm"
-                                  variant={status === s ? "default" : "outline"}
-                                  className="font-mono text-[10px] h-6 px-2"
-                                  disabled={checkingIn === worker.id}
-                                  onClick={() => markAttendance(worker.id, s)}
-                                >
-                                  {STATUS_CONFIG[s].label}
-                                </Button>
-                              ))}
-                              {record && record.check_in_time && !record.check_out_time && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="font-mono text-[10px] h-6 px-2 border-amber-500/30 text-amber-400"
-                                  onClick={() => handleCheckOut(record)}
-                                >
-                                  Check Out
-                                </Button>
-                              )}
-                            </div>
+                            {isAdmin ? (
+                              <div className="flex gap-1 flex-wrap">
+                                {["present", "absent", "late", "on_leave", "half_day"].map((s) => (
+                                  <Button
+                                    key={s}
+                                    size="sm"
+                                    variant={status === s ? "default" : "outline"}
+                                    className="font-mono text-[10px] h-6 px-2"
+                                    disabled={checkingIn === worker.id}
+                                    onClick={() => markAttendance(worker.id, s)}
+                                  >
+                                    {STATUS_CONFIG[s].label}
+                                  </Button>
+                                ))}
+                                {record && record.check_in_time && !record.check_out_time && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="font-mono text-[10px] h-6 px-2 border-warning/30 text-warning"
+                                    onClick={() => handleCheckOut(record)}
+                                  >
+                                    Check Out
+                                  </Button>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="font-mono text-[10px] text-muted-foreground">Admin only</span>
+                            )}
                           </TableCell>
                         </TableRow>
                       );

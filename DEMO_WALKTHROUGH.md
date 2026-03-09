@@ -95,6 +95,7 @@
 3. **Add Worker** — Click "Add Operative", fill form with name, district, booth, skills, experience, email, and **role assignment**
 4. **Worker Profile** — Click a worker row → `/workers/:id` to show badges, performance score, task history
 5. **Account Creation** — Explain that adding an email auto-creates a login account via Edge Function
+6. **Admin-Only Delete** — Point out that only Admin users see the delete (trash) icon; non-admins cannot delete workers
 
 ### Script
 
@@ -102,7 +103,9 @@
 >
 > When we create a new worker with an email, the system automatically provisions a user account through a backend function. The worker gets login credentials, and their role determines what data they can access.
 >
-> The profile page shows their complete operational history — badges earned, tasks completed, performance trends. This data feeds directly into our **AI Smart Assignment** engine."
+> The profile page shows their complete operational history — badges earned, tasks completed, performance trends. This data feeds directly into our **AI Smart Assignment** engine.
+>
+> Importantly, **only Admins can delete workers** — this prevents accidental or unauthorized removal of operatives from the roster."
 
 ### 🔗 Q&A Alignment
 - **Judge Q18:** "How do you manage the worker lifecycle?" → Full CRUD with automated account provisioning
@@ -119,13 +122,15 @@
 
 1. **Task List** — Priority badges (low/medium/high/critical), status pills, filtering
 2. **Create Task** — Set title, description, priority, district, booth
-3. **AI Smart Assign** — Navigate to `/smart-assign`, select a task, click "Get AI Recommendations"
-4. **AI Results** — Show ranked worker recommendations with match reasoning
-5. **Accept Assignment** — Assign the recommended worker
+3. **Edit Task** — Click pencil icon on any task to modify its details
+4. **Delete Task** — Click trash icon to permanently remove a task
+5. **AI Smart Assign** — Navigate to `/smart-assign`, select a task, click "Get AI Recommendations"
+6. **AI Results** — Show ranked worker recommendations with match reasoning
+7. **Accept Assignment** — Assign the recommended worker
 
 ### Script
 
-> "Task management supports full lifecycle tracking — pending, assigned, in-progress, completed, cancelled. Each task has priority levels and geographic assignments.
+> "Task management supports full lifecycle tracking — pending, assigned, in-progress, completed, cancelled. Each task has priority levels and geographic assignments. Tasks can be **edited inline** via the pencil icon or **deleted** via the trash icon for full CRUD control.
 >
 > But the real innovation is **AI Smart Assign**. Watch this — I select a task and click 'Get AI Recommendations.' Our backend edge function calls **Google Gemini** to analyze every worker's profile against the task requirements. It considers **skills, experience, location proximity, current workload, and performance history** to return ranked recommendations.
 >
@@ -144,14 +149,17 @@
 
 ### What to Demonstrate
 
-1. **Mark Attendance Tab** — Select worker, show GPS-verified check-in with coordinate capture
-2. **Check Out** — Demonstrate check-out with automatic duration calculation
-3. **Records Tab** — Daily attendance log with timestamps, GPS badges, duration
-4. **Analytics Tab** — Attendance distribution chart, district rates, GPS verification stats
+1. **Admin-Only Control** — Show that only Admin users see the attendance marking buttons; non-admin users see "Admin only"
+2. **Mark Attendance Tab** — Select worker, show GPS-verified check-in with coordinate capture
+3. **Check Out** — Demonstrate check-out with automatic duration calculation
+4. **Records Tab** — Daily attendance log with timestamps, GPS badges, duration
+5. **Analytics Tab** — Attendance distribution chart, district rates, GPS verification stats
 
 ### Script
 
 > "The Attendance System supports three modes: **manual check-in/check-out with GPS verification**, daily present/absent marking, and **GPS-based auto-attendance** when workers enter their geo-fenced areas.
+>
+> Critically, **only Admin users can mark attendance** — non-admins see the attendance data but cannot modify it. This prevents unauthorized attendance manipulation.
 >
 > Every check-in captures GPS coordinates and is verified against the worker's assigned location. This prevents ghost attendance — a massive problem in large-scale field operations. The analytics dashboard gives instant visibility into district-level attendance rates."
 
@@ -240,17 +248,22 @@
 
 ### What to Demonstrate
 
-1. **Active Broadcasts** — Show existing broadcasts with severity levels (info/warning/critical)
+1. **Active Broadcasts** — Show existing broadcasts with severity levels (info/warning/critical/emergency)
 2. **Create Broadcast** — Create a new emergency broadcast
-3. **Delivery** — Explain real-time delivery to all authenticated users
+3. **Crisis Mode Activation** — Click "Crisis Mode" to activate emergency mobilization
+4. **Crisis Banner** — Show the pulsing red crisis-active banner with inline "Stand Down" button
+5. **Crisis Deactivation** — Click "Stop Crisis" to deactivate all emergency broadcasts and send a stand-down notice
+6. **Delivery** — Explain real-time delivery to all authenticated users
 
 ### Script
 
-> "**War Mode** is for election day — or any crisis. Campaign leadership can push emergency broadcasts to every field worker instantly. Severity levels — info, warning, critical — ensure the right urgency. Think of it as a **military-grade alert system** for democratic operations."
+> "**War Mode** is for election day — or any crisis. Campaign leadership can push emergency broadcasts to every field worker instantly. Severity levels — info, warning, critical, emergency — ensure the right urgency.
+>
+> Watch this — I click **Crisis Mode** and the system activates emergency mobilization with a pulsing banner across the interface. When the crisis is resolved, I click **Stop Crisis** — it deactivates all emergency broadcasts, sends a stand-down notice, and returns the system to normal operations. Think of it as a **military-grade alert system** for democratic operations — with a proper stand-down protocol."
 
 ### 🔗 Q&A Alignment
-- **Judge Q60:** "How do you handle emergency scenarios?" → Real-time broadcast system with severity classification
-- **Government Q75:** "Can this be used for disaster response?" → Absolutely — the broadcast architecture is domain-agnostic
+- **Judge Q60:** "How do you handle emergency scenarios?" → Real-time broadcast system with severity classification, one-click crisis activation and deactivation
+- **Government Q75:** "Can this be used for disaster response?" → Absolutely — the broadcast architecture is domain-agnostic with full crisis lifecycle management
 
 ---
 
